@@ -12,8 +12,6 @@ const router = express.Router();
 router.get(`/`, (req, res) => {
   Project.get()
     .then(projects => {
-      // console.log(projects);
-      // res.end();
       res.status(200).json(projects);
     })
     .catch(err => {
@@ -29,8 +27,16 @@ router.get(`/:id`, validateProjectId, (req, res) => {
 
 // CREATE A PROJECT
 router.post(`/`, validateProject, (req, res) => {
-  console.log("post");
-  //   Project.insert();
+  const project = req.body;
+
+  Project.insert(project)
+    .then(newProject => {
+      res.status(201).json(newProject);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({ error: "The post could not be created" });
+    });
 });
 
 // UPDATE A PROJECT
@@ -64,20 +70,33 @@ function validateProjectId(req, res, next) {
 
 // check user input
 function validateProject(req, res, next) {
-  console.log("request\t", req.body);
+  //   console.log("request\t", req.body);
   const inputPost = req.body;
   console.log(typeof inputPost.completed);
 
+  // check existence
   if (Object.keys(inputPost).length === 0) {
     res.status(400).json({ message: "missing project data!" });
   } else if (!inputPost.name) {
     res.status(400).json({ message: "missing project name!" });
   } else if (!inputPost.description) {
     res.status(400).json({ message: "missing project description!" });
-  } else if (inputPost.completed && typeof inputPost.completed !== "boolean") {
+  }
+  // check contents
+  else if (inputPost.completed && typeof inputPost.completed !== "boolean") {
     // if "completed" exists as a key, check if boolean
     res.status(400).json({ message: "completed flag must be a boolean!" });
-  } else {
+  } else if (
+    typeof inputPost.name !== "string" ||
+    typeof inputPost.description !== "string"
+  ) {
+    // if "completed" exists as a key, check if boolean
+    res
+      .status(400)
+      .json({ message: "project name and description must be strings!" });
+  }
+  // continue if no errors
+  else {
     next();
   }
 }
