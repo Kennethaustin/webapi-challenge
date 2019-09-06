@@ -14,7 +14,8 @@ function logger(req, res, next) {
   console.log(
     `Request method:\t${req.method}\nRequest url:\t${
       req.url
-    }\nTime:\t${Date.now()}\n\n`
+      // }\nTime:\t${Date.now()}\n\n`
+    }\nTime:\t${new Date().toISOString()}\n\n`
   );
   next();
 }
