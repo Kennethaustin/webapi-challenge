@@ -8,7 +8,7 @@ const router = express.Router();
 // ENDPOINTS
 // ================================================
 
-// GET ALL PROJECTS
+// READ ALL PROJECTS - done
 router.get(`/`, (req, res) => {
   Project.get()
     .then(projects => {
@@ -22,22 +22,22 @@ router.get(`/`, (req, res) => {
     });
 });
 
-// GET A PROJECT
+// READ A PROJECT - done
 router.get(`/:id`, validateProjectId, (req, res) => {
-  //   const projectId = req.params.id;
-  //   Project.get(projectId)
-  //     .then(project => {
-  //       res.status(200).json(project);
-  //     })
-  //     .catch(err => {
-  //       console.log(err);
-  //       res
-  //         .status(500)
-  //         .json({ error: `Project ${projectId} could not be retrieved.` });
-  //     });
-
   res.status(200).json(req.project);
 });
+
+// CREATE A PROJECT
+router.post(`/`, validateProject, (req, res) => {
+  console.log("post");
+  //   Project.insert();
+});
+
+// UPDATE A PROJECT
+
+// DELETE A PROJECT
+
+// GET A PROJECT'S ACTIONS
 
 // CUSTOM MIDDLEWARE
 // ================================================
@@ -60,6 +60,26 @@ function validateProjectId(req, res, next) {
         .status(500)
         .json({ error: `Project ${projectId} could not be retrieved` });
     });
+}
+
+// check user input
+function validateProject(req, res, next) {
+  console.log("request\t", req.body);
+  const inputPost = req.body;
+  console.log(typeof inputPost.completed);
+
+  if (Object.keys(inputPost).length === 0) {
+    res.status(400).json({ message: "missing project data!" });
+  } else if (!inputPost.name) {
+    res.status(400).json({ message: "missing project name!" });
+  } else if (!inputPost.description) {
+    res.status(400).json({ message: "missing project description!" });
+  } else if (inputPost.completed && typeof inputPost.completed !== "boolean") {
+    // if "completed" exists as a key, check if boolean
+    res.status(400).json({ message: "completed flag must be a boolean!" });
+  } else {
+    next();
+  }
 }
 
 module.exports = router;
