@@ -35,15 +35,61 @@ router.post(`/`, validateProject, (req, res) => {
     })
     .catch(err => {
       console.log(err);
-      res.status(500).json({ error: "The post could not be created" });
+      res.status(500).json({ error: "The project could not be created" });
     });
 });
 
 // UPDATE A PROJECT
+router.put(`/:id`, validateProjectId, validateProject, (req, res) => {
+  const projectId = req.params.id;
+  const project = req.body;
+
+  Project.update(projectId, project)
+    .then(updatedProject => {
+      res.status(200).json(updatedProject);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({ error: "The project could not be updated" });
+    });
+});
 
 // DELETE A PROJECT
+router.delete(`/:id`, validateProjectId, (req, res) => {
+  const projectId = req.params.id;
+
+  Project.remove(projectId)
+    .then(
+      () =>
+        res.status(204).json({ message: `Project ${projectId} was deleted!` }) // successfully deleted, but why doesn't this return?
+    )
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({ error: "The project could not be deleted" });
+    });
+});
 
 // GET A PROJECT'S ACTIONS
+router.get(`/:id/actions`, validateProjectId, (req, res) => {
+  const projectId = req.params.id;
+  Project.getProjectActions(projectId)
+    .then(projectActions => {
+      if (projectActions[0]) {
+        res.status(200).json(projectActions);
+      } else {
+        // if project exists but has no actions
+        res
+          .status(404)
+          .json({ message: `Project ${projectId} has no actions!` });
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      res
+        .status(500)
+        .json({ error: "The project's actions could not be retrieved" });
+    });
+});
 
 // CUSTOM MIDDLEWARE
 // ================================================
@@ -71,24 +117,27 @@ function validateProjectId(req, res, next) {
 // check user input
 function validateProject(req, res, next) {
   //   console.log("request\t", req.body);
-  const inputPost = req.body;
-  console.log(typeof inputPost.completed);
+  const inputProject = req.body;
+  console.log(typeof inputProject.completed);
 
   // check existence
-  if (Object.keys(inputPost).length === 0) {
+  if (Object.keys(inputProject).length === 0) {
     res.status(400).json({ message: "missing project data!" });
-  } else if (!inputPost.name) {
+  } else if (!inputProject.name) {
     res.status(400).json({ message: "missing project name!" });
-  } else if (!inputPost.description) {
+  } else if (!inputProject.description) {
     res.status(400).json({ message: "missing project description!" });
   }
   // check contents
-  else if (inputPost.completed && typeof inputPost.completed !== "boolean") {
+  else if (
+    inputProject.completed &&
+    typeof inputProject.completed !== "boolean"
+  ) {
     // if "completed" exists as a key, check if boolean
     res.status(400).json({ message: "completed flag must be a boolean!" });
   } else if (
-    typeof inputPost.name !== "string" ||
-    typeof inputPost.description !== "string"
+    typeof inputProject.name !== "string" ||
+    typeof inputProject.description !== "string"
   ) {
     // if "completed" exists as a key, check if boolean
     res
