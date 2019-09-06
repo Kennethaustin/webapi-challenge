@@ -60,8 +60,7 @@ router.delete(`/:id`, validateProjectId, (req, res) => {
 
   Project.remove(projectId)
     .then(
-      () =>
-        res.status(204).json({ message: `Project ${projectId} was deleted!` }) // successfully deleted, but why doesn't this return?
+      () => res.status(204).end() // successfully deleted, but why doesn't .json() return?
     )
     .catch(err => {
       console.log(err);
