@@ -118,6 +118,7 @@ function validateProject(req, res, next) {
   //   console.log("request\t", req.body);
   const inputProject = req.body;
   console.log(typeof inputProject.completed);
+  f;
 
   // check existence
   if (Object.keys(inputProject).length === 0) {

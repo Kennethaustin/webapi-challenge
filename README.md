@@ -24,15 +24,22 @@ In this challenge, create a web API around the following resources: `Projects` a
 
 Demonstrate your understanding of this Sprint's concepts by answering the following free-form questions. Edit this document to include your answers after each question. Make sure to leave a blank line above and below your answer so it is clear and easy to read by your project manager.
 
-- [ ] Mention two parts of Express that you learned about this week.
+- [x] Mention two parts of Express that you learned about this week.
 
-- [ ] Describe Middleware?
+- Route handlers are just middleware functions that take in a request and return a response
+- Express is a framework to back-end as to React is to front-end
 
-- [ ] Describe a Resource?
+- [x] Describe Middleware?
+- A sequence of functions that execute to handle changes to requests and responses.
 
-- [ ] What can the API return to help clients know if a request was successful?
+- [x] Describe a Resource?
+- A resource is a "noun" that is interacted with in client-server interactions. For example, a RESTful API endpoint provides resources for a client to interact with to retrieve information and interact with that resource.
 
-- [ ] How can we partition our application into sub-applications?
+- [x] What can the API return to help clients know if a request was successful?
+- API's can return an HTTP status code to the client to indicate whether certain requests were successful, and if not, why there were errors. Status codes help to identify the cause of a problem if a resource doesn't load.
+
+- [x] How can we partition our application into sub-applications?
+- We can partition our application into smaller sub-apps to compartmentalize logic in our code and make it easier to debug. For example, we can create separate routes with different endpoints which allows for modular components.
 
 ## Project Setup
 
@@ -73,7 +80,7 @@ The `projectModel.js` helper includes an extra method called `getProjectActions(
 
 Design and build the necessary endpoints to:
 
-- [ ] Perform CRUD operations on _projects_ and _actions_. When adding an action, make sure the `project_id` provided belongs to an existing `project`. If you try to add an action with an `id` of 3 and there is no project with that `id` the database will return an error.
+- [x] Perform CRUD operations on _projects_ and _actions_. When adding an action, make sure the `project_id` provided belongs to an existing `project`. If you try to add an action with an `id` of 3 and there is no project with that `id` the database will return an error.
 - [x] Retrieve the list of actions for a project.
 
 ### Database Schemas

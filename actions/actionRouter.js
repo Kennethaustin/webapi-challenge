@@ -28,6 +28,7 @@ router.get(`/:id`, validateActionId, (req, res) => {
 });
 
 // CREATE AN ACTION - ensure that project_id provided belongs to existing project (NEED TO DO)
+// use Project.getProjectActions instead?
 router.post(`/`, validateAction, (req, res) => {
   const action = req.body;
   const projectId = req.body.project_id;
